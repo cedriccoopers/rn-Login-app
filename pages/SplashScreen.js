@@ -18,7 +18,6 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#009387" barStyle="light-content" />
       <View style={styles.header}>
         <Animatable.Image
           animation="bounceIn"
@@ -28,35 +27,12 @@ const SplashScreen = ({ navigation }) => {
           resizeMode="stretch"
         />
       </View>
-      <Animatable.View
-        style={[
-          styles.footer,
-          {
-            backgroundColor: colors.background,
-          },
-        ]}
-        animation="fadeInUpBig"
-      >
-        <Text
-          style={[
-            styles.title,
-            {
-              color: colors.text,
-            },
-          ]}
-        >
-          Stay connected with everyone!
-        </Text>
+      <Animatable.View style={styles.footer} animation="fadeInUpBig">
+        <Text style={styles.title}>Stay connected with everyone!</Text>
         <Text style={styles.text}>Sign in with account</Text>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
-            <LinearGradient
-              colors={["#08d4c4", "#01ab9d"]}
-              style={styles.signIn}
-            >
-              <Text style={styles.textSign}>Get Started</Text>
-              <MaterialIcons name="navigate-next" color="#fff" size={20} />
-            </LinearGradient>
+            <Text>Get Started</Text>
           </TouchableOpacity>
         </View>
       </Animatable.View>
@@ -101,8 +77,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   button: {
-    alignItems: "flex-end",
+    alignItems: "center",
     marginTop: 30,
+    backgroundColor: "#08d4cd",
+    color: "#fff",
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
   },
   signIn: {
     width: 150,
