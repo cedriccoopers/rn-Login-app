@@ -32,7 +32,7 @@ const SplashScreen = ({ navigation }) => {
         <Text style={styles.text}>Sign in with account</Text>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
-            <Text>Get Started</Text>
+            <Text style={styles.setColorWhite}>Get Started >>>></Text>
           </TouchableOpacity>
         </View>
       </Animatable.View>
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
     backgroundColor: "#08d4cd",
-    color: "#fff",
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
     borderBottomLeftRadius: 5,
@@ -93,6 +92,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 50,
     flexDirection: "row",
+  },
+  setColorWhite: {
+    color: "#fff",
+    fontWeight: "bold",
   },
   textSign: {
     color: "white",
