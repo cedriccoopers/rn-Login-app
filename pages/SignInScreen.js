@@ -3,6 +3,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Dimensions,
   TextInput,
   Platform,
   StyleSheet,
@@ -10,62 +11,38 @@ import {
   Alert,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import LinearGradient from "react-native-linear-gradient";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 
-import { useTheme } from "react-native-paper";
-
-import { AuthContext } from "../components/context";
-
-import Users from "../model/users";
-
 const SignInScreen = ({ navigation }) => {
   const [data, setData] = React.useState({
-    username: "",
+    email: "",
     password: "",
     check_textInputChange: false,
     secureTextEntry: true,
-    isValidUser: true,
-    isValidPassword: true,
   });
 
-  const { colors } = useTheme();
-
-  const { signIn } = React.useContext(AuthContext);
-
   const textInputChange = (val) => {
-    if (val.trim().length >= 4) {
+    if (val.length >= 1) {
       setData({
         ...data,
-        username: val,
+        email: val,
         check_textInputChange: true,
-        isValidUser: true,
       });
     } else {
       setData({
         ...data,
-        username: val,
+        email: val,
         check_textInputChange: false,
-        isValidUser: false,
       });
     }
   };
 
   const handlePasswordChange = (val) => {
-    if (val.trim().length >= 8) {
-      setData({
-        ...data,
-        password: val,
-        isValidPassword: true,
-      });
-    } else {
-      setData({
-        ...data,
-        password: val,
-        isValidPassword: false,
-      });
-    }
+    setData({
+      ...data,
+      password: val,
+    });
   };
 
   const updateSecureTextEntry = () => {
@@ -75,82 +52,25 @@ const SignInScreen = ({ navigation }) => {
     });
   };
 
-  const handleValidUser = (val) => {
-    if (val.trim().length >= 4) {
-      setData({
-        ...data,
-        isValidUser: true,
-      });
-    } else {
-      setData({
-        ...data,
-        isValidUser: false,
-      });
-    }
-  };
-
-  const loginHandle = (userName, password) => {
-    const foundUser = Users.filter((item) => {
-      return userName == item.username && password == item.password;
-    });
-
-    if (data.username.length == 0 || data.password.length == 0) {
-      Alert.alert(
-        "Wrong Input!",
-        "Username or password field cannot be empty.",
-        [{ text: "Okay" }]
-      );
-      return;
-    }
-
-    if (foundUser.length == 0) {
-      Alert.alert("Invalid User!", "Username or password is incorrect.", [
-        { text: "Okay" },
-      ]);
-      return;
-    }
-    signIn(foundUser);
-  };
-
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#009387" barStyle="light-content" />
       <View style={styles.header}>
-        <Text style={styles.text_header}>Welcome!</Text>
+        <Text style={styles.text_header}>Welcome</Text>
       </View>
       <Animatable.View
+        style={styles.footer}
         animation="fadeInUpBig"
-        style={[
-          styles.footer,
-          {
-            backgroundColor: colors.background,
-          },
-        ]}
+        style={styles.footer}
       >
-        <Text
-          style={[
-            styles.text_footer,
-            {
-              color: colors.text,
-            },
-          ]}
-        >
-          Username
-        </Text>
+        <Text style={styles.text_footer}>Email</Text>
         <View style={styles.action}>
-          <FontAwesome name="user-o" color={colors.text} size={20} />
+          <FontAwesome name="user-o" color="#05375a" size={20} />
           <TextInput
-            placeholder="Your Username"
-            placeholderTextColor="#666666"
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
+            placeholder="Your Email"
+            style={styles.textInput}
             autoCapitalize="none"
             onChangeText={(val) => textInputChange(val)}
-            onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
           />
           {data.check_textInputChange ? (
             <Animatable.View animation="bounceIn">
@@ -158,37 +78,13 @@ const SignInScreen = ({ navigation }) => {
             </Animatable.View>
           ) : null}
         </View>
-        {data.isValidUser ? null : (
-          <Animatable.View animation="fadeInLeft" duration={500}>
-            <Text style={styles.errorMsg}>
-              Username must be 4 characters long.
-            </Text>
-          </Animatable.View>
-        )}
-
-        <Text
-          style={[
-            styles.text_footer,
-            {
-              color: colors.text,
-              marginTop: 35,
-            },
-          ]}
-        >
-          Password
-        </Text>
+        <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
         <View style={styles.action}>
-          <Feather name="lock" color={colors.text} size={20} />
+          <FontAwesome name="lock" color="#05375a" size={20} />
           <TextInput
             placeholder="Your Password"
-            placeholderTextColor="#666666"
             secureTextEntry={data.secureTextEntry ? true : false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
+            style={styles.textInput}
             autoCapitalize="none"
             onChangeText={(val) => handlePasswordChange(val)}
           />
@@ -200,64 +96,13 @@ const SignInScreen = ({ navigation }) => {
             )}
           </TouchableOpacity>
         </View>
-        {data.isValidPassword ? null : (
-          <Animatable.View animation="fadeInLeft" duration={500}>
-            <Text style={styles.errorMsg}>
-              Password must be 8 characters long.
-            </Text>
-          </Animatable.View>
-        )}
 
-        <TouchableOpacity>
-          <Text style={{ color: "#009387", marginTop: 15 }}>
-            Forgot password?
-          </Text>
-        </TouchableOpacity>
         <View style={styles.button}>
-          <TouchableOpacity
-            style={styles.signIn}
-            onPress={() => {
-              loginHandle(data.username, data.password);
-            }}
-          >
-            <LinearGradient
-              colors={["#08d4c4", "#01ab9d"]}
-              style={styles.signIn}
-            >
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: "#fff",
-                  },
-                ]}
-              >
-                Sign In
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("SignUpScreen")}
-            style={[
-              styles.signIn,
-              {
-                borderColor: "#009387",
-                borderWidth: 1,
-                marginTop: 15,
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.textSign,
-                {
-                  color: "#009387",
-                },
-              ]}
-            >
-              Sign Up
-            </Text>
+          <Text style={styles.setColorWhite}>Sign In</Text>
+        </View>
+        <View style={[styles.button, { marginTop: 10 }]}>
+          <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
+            <Text style={styles.setColorWhite}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </Animatable.View>
@@ -266,6 +111,9 @@ const SignInScreen = ({ navigation }) => {
 };
 
 export default SignInScreen;
+
+const { height } = Dimensions.get("screen");
+const height_logo = height * 0.28;
 
 const styles = StyleSheet.create({
   container: {
@@ -321,7 +169,12 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 30,
+    backgroundColor: "#08d4cd",
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
   },
   signIn: {
     width: "100%",
@@ -329,6 +182,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
+  },
+  setColorWhite: {
+    color: "#fff",
+    fontWeight: "bold",
   },
   textSign: {
     fontSize: 18,
